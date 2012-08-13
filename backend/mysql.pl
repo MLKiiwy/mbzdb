@@ -398,6 +398,10 @@ sub backend_mysql_update_schema_from_file {
 		if($ignore eq 1) {
 			if ( (index($line,",") > 0) || (index($line,";") > 0) ) {
 				$ignore = 0;
+				if($table ne "" && mbz_table_column_exists($table, "dummycolumn")) {
+					$stmt = "ALTER TABLE `$table` DROP dummycolumn";
+					mbz_do_sql($stmt);
+				}
 			}
 			next;
 		}
