@@ -521,14 +521,15 @@ sub mbz_run_transactions {
 		# next if we are ignoring this table
 		my $pos = index($rep_row[1], '.');
 		my $tableName = substr($rep_row[1], $pos + 2, length($rep_row[1]) - $pos - 3);
+		my $dbName = substr($rep_row[1], 1, $pos - 2);
 		
-		if(mbz_in_array(\@g_ignore_tables, $tableName)) {
+		if(mbz_in_array(\@g_ignore_tables, $tableName) || not($dbName eq "musicbrainz")) {
 			++$rows if(($rep_row[5] eq '0' || $rep_row[5] eq 'f') || $rep_row[2] eq 'd');
 			mbz_do_sql("DELETE FROM $pending WHERE $seqid='$rep_row[0]'");
 			mbz_do_sql("DELETE FROM $pendingdata WHERE $seqid='$rep_row[0]'");
 			next;
 		}
-		
+
 		# also ignore any table that starts with "nz"
 		next if(substr($tableName, 0, 2) eq "nz");
 		
