@@ -112,7 +112,10 @@ sub backend_mysql_load_data {
 	foreach my $file (@files) {
 		my $t1 = time();
 		$table = $file;
+		my $pos = index($table, '.');
+		
 		next if($table eq "blank.file" || substr($table, 0, 1) eq '.');
+		next if($pos > 0);
 
 		print "\n" . localtime() . ": Loading data into '$file' ($i of $count)...\n";
 		mbz_do_sql("LOAD DATA LOCAL INFILE 'mbdump/$file' INTO TABLE `$table` ".
